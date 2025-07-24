@@ -34,6 +34,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='product_images/', blank=True, null=True)   # media files
 
     class Meta:
         ordering = ('name',)
@@ -49,7 +50,7 @@ class ProductImage(models.Model):
     product = models.ForeignKey(Product, related_name='product_images',
                                 on_delete=models.CASCADE,
                                 null=True, blank=True)
-    picture = models.ImageField(upload_to='static/img/product/')
+    picture = models.ImageField(upload_to='product_images') # goes now to media/product_images instead to static
 
     def __str__(self):
-        return self.picture.url
+        return self.picture.name  # was before .url
