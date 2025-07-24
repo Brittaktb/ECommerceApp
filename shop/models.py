@@ -1,16 +1,14 @@
 from django.db import models
 from django.urls import reverse
-from parler.models import TranslatableModel
-
 
 # Create your models here.
-class Category(TranslatableModel):
-    name=models.CharField(max_length=200, db_index=True),
+class Category(models.Model):
+    name=models.CharField(max_length=200, db_index=True)
     slug=models.SlugField(max_length=200, unique=True)
 
 
     class Meta:
-        ordering = ("name",)
+        ordering = ('name',)
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
@@ -19,13 +17,13 @@ class Category(TranslatableModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("shop:product_list_by_category", args=[self.slug])     
+        return reverse("shop:product_list_by_category", args=[self.slug])
 
 
-class Product(TranslatableModel):
-    name=models.CharField(max_length=200, db_index=True),
-    slug=models.SlugField(max_length=200, db_index=True),
-    description=models.TextField(blank=True),
+class Product(models.Model):
+    name=models.CharField(max_length=200, db_index=True)
+    slug=models.SlugField(max_length=200, db_index=True)
+    description=models.TextField(blank=True)
     sku = models.CharField(max_length=20, unique=True, null=True)
     category = models.ForeignKey(
         Category, related_name="products", on_delete=models.CASCADE
@@ -38,7 +36,7 @@ class Product(TranslatableModel):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ("name",)
+        ordering = ('name',)
         unique_together = (("id", "slug"),)
 
     def __str__(self):
