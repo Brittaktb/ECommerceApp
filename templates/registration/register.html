@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
-{% block title %} Login {% endblock title %}
+{% block title %} Register {% endblock title %}
 {% block content %}
     <div class="center">
-      <h1>Login</h1>
+      <h1>Register</h1>
+
       {% if messages %}
           {% for message in messages %}
               {% if message.tags == 'error' %}
@@ -18,10 +19,28 @@
         {% csrf_token %}
 
         <div class="txt_field">
+            <input type="text" required name="first_name">
+            <span></span>
+            <label>First Name</label>
+          </div>
+
+          <div class="txt_field">
+            <input type="text" required name="last_name">
+            <span></span>
+            <label>Last Name</label>
+          </div>
+
+        <div class="txt_field">
           <input type="text" required name="username">
           <span></span>
           <label>Username</label>
         </div>
+
+        <div class="txt_field">
+            <input type="email" required name="email">
+            <span></span>
+            <label>Email</label>
+          </div>
 
         <div class="txt_field">
           <input type="password" required name="password">
@@ -29,10 +48,10 @@
           <label>Password</label>
         </div>
 
-        <input type="submit" value="Login">
+        <!-- <div class="pass">Forgot Password?</div> -->
+        <input type="submit" value="Register">
         <div class="signup_link">
-          Not a member? <a href="{% url 'users:register' %}">Signup</a>
-          {% comment %} <p>Forgot your Password? <a href="{% url 'users:forgot-password' %}">Reset Password</a></p> {% endcomment %}
+          Already have an account? <a href="{% url 'users:login' %}">Login</a>
         </div>
       </form>
     </div>

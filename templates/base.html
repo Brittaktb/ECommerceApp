@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>{% block title %} Shop {% endblock %}</title>
+    <title>{% block title %} Shop {% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
@@ -13,6 +13,7 @@
     <a href="/cart/">cart</a>
     <a href="/orders/">orders</a>
     <a href="/payments/">payments</a>
+    {% comment %} <a href="{% url 'users:logout' %}">Logout</a> {% endcomment %}
     </nav>
 </header>
 <div class="container">
