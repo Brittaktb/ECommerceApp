@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Available Products </h2>
+
+ <!-- Searchfield by category to add -->
+
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Brand</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Action</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+      <td>{{ product.name }}</td>
+      <td>{{ product.brand }}</td>
+      <td>{{ product.description }}</td>
+      <td>${{ product.price }}</td>
+      <td><a href="{% url 'product:create' order.id %}"><button> Add to Shopping CART</button></a></td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}
