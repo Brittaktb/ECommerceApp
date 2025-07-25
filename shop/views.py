@@ -11,3 +11,7 @@ def product_list(request):
 
 def product_detail(request):                              # we are filtering to get only available categories.
     category = Category.objects.filter(availability=True)
+    return render(request, "shop/product_detail.html")
+    
+def shop(request):
+    return render(request, "shop/shop.html")
