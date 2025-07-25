@@ -142,3 +142,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = 'users.CustomUser'  # app.class
 
 CART_SESSION_ID = "cart"
+
+LOGIN_URL = "users:login"
