@@ -22,11 +22,11 @@ from django.conf.urls.static import static      # for media files
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("shop.urls", namespace="shop")),
+    path("", include("users.urls", namespace="users")),
+    path("shop", include("shop.urls", namespace="shop")),
     path("cart/", include("cart.urls", namespace="cart")),
     path("orders/", include("orders.urls", namespace="orders")),
     path("payments/", include("payments.urls", namespace="payments")),
-    path("users/", include("users.urls", namespace="users")),
 ]
 
 if settings.DEBUG:
