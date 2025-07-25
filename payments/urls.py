@@ -1,8 +1,8 @@
 from django.urls import path
 from . import views
-
+from .views import PaymentListView
 app_name = "payments"
 
 urlpatterns = [
-    #path("confirm/<int:booking_id>/", views.pay, name="pay"),
+    path("", PaymentListView.as_view(), name="payments-overview"),
 ]

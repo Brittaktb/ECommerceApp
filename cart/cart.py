@@ -1,15 +1,33 @@
+from django.conf import settings
+from shop.models import Product
+from decimal import Decimal
+
 class Cart(object):  # Request object
     def __init__(self, request):
         """
         Initialize the cart.
         """
-        pass
+        self.session = request.session
+        # get existing cart from session data or create new one
+        cart = self.session.get(settings.CART_SESSION_ID)
+        if not cart:
+            # save an empty cart in the session
+            cart = self.session[settings.CART_SESSION_ID] = {}
+        self.cart = cart
 
     def add(self, product, quantity=1, override_quantity=False):
         """
         Add a product to the cart or update its quantity.
         """
-        pass
+        product_id = str(product.id)
+        if product_id not in self.cart:
+            self.cart[product_id] = {'quantity': 0,
+                                    'price': str(product.price)}
+        if override_quantity:
+            self.cart[product_id]['quantity'] = quantity
+        else:
+            self.cart[product_id]['quantity'] += quantity
+        self.save()
 
     def save(self):
         # mark the session as "modified" to make sure it gets saved
@@ -19,30 +37,46 @@ class Cart(object):  # Request object
         """
         Remove a product from the cart.
         """
-        pass
+        product_id = str(product.id)
+        if product_id in self.cart:
+            del self.cart[product_id]
+        self.save()
 
     def __iter__(self):
         """
         Iterate over the items in the cart and get the products
         from the database.
         """
-        pass
+        product_ids = self.cart.keys()
+        # get the product objects and add them to the cart
+        products = Product.objects.filter(id__in=product_ids)
+        cart = self.cart.copy()
+        for product in products:
+            cart[str(product.id)]['product'] = product
+        for item in cart.values():
+            item['price'] = Decimal(item['price'])
+            item['total_price'] = Decimal(item['price']) * item['quantity']
+            yield item
 
     def __len__(self):
         """
         Count all items in the cart.
         """
-        pass
+        return sum(item['quantity'] for item in self.cart.values())
 
     def get_total_price(self):
-        pass
+        """Returns total price of the cart"""
+        return sum(Decimal(item['price']) * item['quantity'] for item
+                in self.cart.values())
 
     def clear(self):
         """Removes cart from the session."""
-        pass
+        for key in list(self.cart.keys()):  # Use list() to create a copy of keys
+            del self.cart[key]
+        self.save()
 
-    def get_discount(self):
-        pass
+    # def get_discount(self):
+    #     pass
 
-    def get_total_price_after_discount(self):
-        pass
+    # def get_total_price_after_discount(self):
+    #     pass

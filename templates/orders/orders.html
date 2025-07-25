@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Orders overview
+{% endblock title %}
+
+{% block content %}
+<h2>All Orders Overview</h2>
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customers email</th>
+                <th>Customers-id</th>
+                <th>Order date</th>
+                <th>Paid status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.email }}</td>
+                <td>{{ order.customer.id }}</td>
+                <td>{{ order.created|date:"d.m.Y H:i" }}</td>
+                <td>{{ order.paid }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>No orders found</p>
+    {% endif %}
+{% endblock %}
+

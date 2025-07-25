@@ -4,6 +4,10 @@ from .models import Category, Product, ProductImage
 def home(request):
     return render(request, "shop/home.html")
 
+
+def shop(request):
+    return render(request, "shop/shop.html")
+
 def product_list(request):
     """The product_list."""
     products = Product.objects.filter(availability=True) # we are filtering to get only available products.
