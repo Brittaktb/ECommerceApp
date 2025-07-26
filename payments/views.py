@@ -28,7 +28,6 @@ def process_payment(request, order_id):
         'order': order
     })
 
-
 # @login_required
 # def payment_complete(request, pk):
 #     payment = get_object_or_404(Payment, pk=pk, user=request.user)
@@ -38,12 +37,13 @@ def process_payment(request, order_id):
 
 
 
-def payment_complete(request):
-    """displays payment success message and order details view"""
-    pass
+# def payment_complete(request):
+#     """displays payment success message and order details view"""
+#     pass
 
-class PaymentListView(ListView):
-    model = Payment
-    template_name = 'payments/payments.html'
-    context_object_name = 'payments'
-    ordering = ['-created_at']
+# @login_required
+# class PaymentListView(ListView):
+#     model = Payment
+#     template_name = 'payments/payments.html'
+#     context_object_name = 'payments'
+#     ordering = ['-created_at']

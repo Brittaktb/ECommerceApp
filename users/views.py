@@ -86,7 +86,7 @@ def ForgotPassword(request):
             new_password_reset = PasswordReset(user=user)
             new_password_reset.save()
 
-            password_reset_url = reverse('reset-password', kwargs={'reset_id': new_password_reset.reset_id})
+            password_reset_url = reverse('users:reset-password', kwargs={'reset_id': new_password_reset.reset_id})
 
             full_password_reset_url = f'{request.scheme}://{request.get_host()}{password_reset_url}'
 
@@ -102,23 +102,24 @@ def ForgotPassword(request):
             email_message.fail_silently = True
             email_message.send()
 
-            return redirect('password-reset-sent', reset_id=new_password_reset.reset_id)
+            return redirect('users:password-reset-sent', reset_id=new_password_reset.reset_id)
 
         except CustomUser.DoesNotExist:
             messages.error(request, f"No user with email '{email}' found")
             return redirect('users:forgot-password')
 
-    return render(request, 'forgot_password.html')
+    return render(request, 'registration/forgot_password.html')
 
 def PasswordResetSent(request, reset_id):
 
     if PasswordReset.objects.filter(reset_id=reset_id).exists():
-        return render(request, 'password_reset_sent.html')
+        return render(request, 'registration/password_reset_sent.html')
     else:
         # redirect to forgot password page if code does not exist
         messages.error(request, 'Invalid reset id')
         return redirect('users:forgot-password')
 
+@login_required
 def ResetPassword(request, reset_id):
 
     try:
@@ -154,16 +155,16 @@ def ResetPassword(request, reset_id):
                 password_reset_id.delete()
 
                 messages.success(request, 'Password reset. Proceed to login')
-                return redirect('login')
+                return redirect('users:login')
             else:
                 # redirect back to password reset page and display errors
-                return redirect('reset-password', reset_id=reset_id)
+                return redirect('users:reset-password', reset_id=reset_id)
 
 
     except PasswordReset.DoesNotExist:
 
         # redirect to forgot password page if code does not exist
         messages.error(request, 'Invalid reset id')
-        return redirect('forgot-password')
+        return redirect('users:forgot-password')
 
     return render(request, 'reset_password.html')
