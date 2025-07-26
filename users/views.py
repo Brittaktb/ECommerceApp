@@ -76,7 +76,6 @@ def LogoutView(request):
     return redirect("users:login")
 
 def ForgotPassword(request):
-
     if request.method == "POST":
         email = request.POST.get('email')
 
@@ -88,6 +87,7 @@ def ForgotPassword(request):
 
             password_reset_url = reverse('users:reset-password', kwargs={'reset_id': new_password_reset.reset_id})
 
+            #                            http/https         127.0.0.1:8000      /reset-password/<reset_id>
             full_password_reset_url = f'{request.scheme}://{request.get_host()}{password_reset_url}'
 
             email_body = f'Reset your password using the link below:\n\n\n{full_password_reset_url}'
@@ -119,39 +119,37 @@ def PasswordResetSent(request, reset_id):
         messages.error(request, 'Invalid reset id')
         return redirect('users:forgot-password')
 
-@login_required
 def ResetPassword(request, reset_id):
 
     try:
         password_reset_id = PasswordReset.objects.get(reset_id=reset_id)
 
         if request.method == "POST":
+            # Get values from POST data
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
 
+            # Verify that both passwords are valid and match
             passwords_have_error = False
-
             if password != confirm_password:
                 passwords_have_error = True
                 messages.error(request, 'Passwords do not match')
-
             if len(password) < 5:
                 passwords_have_error = True
                 messages.error(request, 'Password must be at least 5 characters long')
 
+            # Verify that the reset link hasn't expired
             expiration_time = password_reset_id.created_when + timezone.timedelta(minutes=10)
-
             if timezone.now() > expiration_time:
                 passwords_have_error = True
                 messages.error(request, 'Reset link has expired')
-
                 password_reset_id.delete()
 
             if not passwords_have_error:
+                # Set password for user and delete password reset object
                 user = password_reset_id.user
                 user.set_password(password)
                 user.save()
-
                 password_reset_id.delete()
 
                 messages.success(request, 'Password reset. Proceed to login')
@@ -167,4 +165,4 @@ def ResetPassword(request, reset_id):
         messages.error(request, 'Invalid reset id')
         return redirect('users:forgot-password')
 
-    return render(request, 'reset_password.html')
+    return render(request, 'registration/reset_password.html')
