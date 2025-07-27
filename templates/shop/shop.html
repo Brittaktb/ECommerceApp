@@ -9,7 +9,7 @@
     <th>Brand</th>
     <th>Description</th>
     <th>Price</th>
-    <th>Add to CART</th>
+    <th>Action</th>
   </tr>
   {% for product in products %}
   <tr>
@@ -18,12 +18,15 @@
     <td>{{ product.description }}</td>
     <td>€{{ product.price }}</td>
     <td>
-      {% comment %} <form method="post" action="{% url 'shop:add_to_cart' product.id %}">
-        {% csrf_token %}
         <button type="submit">Add to Cart</button>
-      </form>  {% endcomment %}
     </td>
   </tr>
   {% endfor %}
 </table>
 {% endblock %}
+
+
+      {% comment %} <!--<form method="post" action="{%  %}">
+        {% csrf_token %}-->
+      <!--shop:add_to_cart product.id-->
+      <!--</form>-->   {% endcomment %}
