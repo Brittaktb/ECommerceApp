@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
 
+
+
 # def order_create(request, product_id):
 #     # Retrieve a product
 #     product = get_object_or_404(Product, id=product_id)
@@ -42,3 +44,4 @@ class OrderListView(ListView):
 def customer_orders_view(request):
     orders = Order.objects.filter(customer=request.user).order_by('-created')
     return render(request, 'orders/customer_orders.html', {'orders': orders})
+

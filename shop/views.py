@@ -11,16 +11,17 @@ def home(request):
 def product_list(request):
     """The product_list."""
     products = Product.objects.filter(available=True) # we are filtering to get only available products.
-    return render(request, "shop/shop.html", {"products": products})
+    return render(request, "shop/product-list.html", {"products": products})
 
 @login_required
 def product_detail(request):                              # we are filtering to get only available categories.
     category = Category.objects.filter(availability=True)
     return render(request, "shop/product_detail.html")
 
-@login_required
-def shop(request):
-    return render(request, "shop/shop.html")
+
+# @login_required  # necessary???
+# def shop(request):
+#     return render(request, "shop/shop.html")
 
 
 
