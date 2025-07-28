@@ -1,2 +1,18 @@
-{% extends 'base.html' %}
-
+{% extends 'base.html' %} 
+{% block title %}Payment Complete{% endblock %} 
+{% block content %}
+<h2>Payment Status</h2>
+<br />
+<p>Order ID: {{ payment.order.id }}</p>
+<p>Amount paid: €{{ payment.amount }}</p>
+<br />
+{% if messages %}
+    <ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class=" {{ message.tags }} " {% endif %}>
+        <strong> {{ message }} </strong>
+    </li>
+    {% endfor %}
+    </ul>
+{% endif %} 
+{% endblock %}
