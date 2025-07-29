@@ -29,13 +29,19 @@ def process_payment(request, order_id=6):
 
     if request.method == 'POST':
         form = PaymentForm(request.POST)
+        #validation of card number happens in forms
         if form.is_valid():
             payment = form.save(commit=False)
             payment.order = order
             payment.user = request.user
             price_str = order.total_price.replace("€", "").replace(",", ".").strip()
             payment.amount = Decimal(price_str)
-            payment.status = Payment.PaymentStatus.SUCCESS  # simulate a success payment
+            
+            if form.cleaned_data['method'] == Payment.PaymentMethod.MANUAL:
+                payment.status = Payment.PaymentStatus.PENDING  # simulates a pending payment
+            else: 
+                payment.status = Payment.PaymentStatus.SUCCESS  # simulates a success payment  
+            
             payment.save()
             
             #cart.clean
@@ -54,6 +60,8 @@ def payment_complete(request, pk):
     if payment.status == Payment.PaymentStatus.SUCCESS:
         messages.success(request, "Payment done successfully.")
         messages.success(request, "Thank you for your purchase!")
+    elif payment.status == Payment.PaymentStatus.PENDING:
+        messages.success(request, "Payment pending.")
     return render(request, 'payments/payment_complete.html', {
         'payment': payment
     })

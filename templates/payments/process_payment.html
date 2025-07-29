@@ -15,16 +15,31 @@ Orders_Payment
 <!-- create payment method from form.py -->
 <form method="post">
   {% csrf_token %}
+  {{ form.method }}
 
-    {% if form %}
-        <div>
-        <label>Choose your payment method:</label>
-        <br>
-        {{ form.method.errors }}
-        {{ form.method }}
-        </div>
-    {% endif %}
-    <br>
-    <button type="submit">Pay Now</button>
+  {% if form.data.method == "card" %}
+      <br>
+      <div id="card-fields">
+          {{ form.card_number.label_tag }} {{ form.card_number }}
+          {% for error in form.card_number.errors %}
+              <p style="color:red">{{ error }}</p>
+          {% endfor %}
+      </div>
+  {% endif %}
+  <br>
+  <button type="submit">Pay</button>
 </form>
+
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
