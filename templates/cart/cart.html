@@ -1,8 +1,24 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block title %} My Cart {% endblock title %}
 
 {% block content %}
     {% if user.is_authenticated %}
         <h2>{{ user.first_name }}'s Cart:</h2>
+
+        <div class="product-list">
+
+
+
+        {% for item in cart_items %}
+        <div class="product-item">
+            <p>{{ item.product.name }} ({{ item.quantity }})</p>
+            <p>Price: ${{ item.product.price }}</p>
+            <a href="{% url 'cart:remove_from_cart' item.id %}">Remove</a>
+        </div>
+        {% empty %}
+        <p>Your cart is empty.</p>
+        {% endfor %}
+
+        </div>
     {% endif %}
 {% endblock %}
