@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+   
+  <h1>Product details:</h1>
+
+  <h2>{{ product.name }}</h2>
+
+<ul style="margin-bottom: 20px; margin-top: 20px">
+  <li><strong>Product SN:</strong> {{ product.id }}</li>
+  <li><strong>Product category:</strong> {{ product.category }}</li>
+  <li><strong>Brand:</strong> {{ product.brand }}</li>
+  <li><strong>Product description:</strong> {{ product.description }}</li>
+  <li><strong>Product availability:</strong> {{ product.available|yesno:"Yes,No" }}</li>
+  <li><strong>Price:</strong> {{ product.price }} €</li>
+</ul>
+
+  {% comment %} <div style="margin-bottom: 20px; margin-top: 20px">
+    <a href="{% url 'shop:product-list' %}"><button> BACK </button></a>
+  </div> {% endcomment %}
+  {% for image in product.product_images.all %}
+    <div style="margin-bottom: 20px; margin-top: 20px">
+        <img src="{{ image.picture.url }}" alt="{{ product.name }}" style="width: 200px;">
+    </div>
+  {% endfor %}
+{% endblock %}

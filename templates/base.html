@@ -7,17 +7,22 @@
   </head>
   <body>
     <header>
-      <h1>DCI-Python-Shop</h1>
+      <h1>Ecommerce-Shop No 1</h1>
       <nav>
         <a href="/">Home</a>
+        <a href="/shop/product-list/">shop</a>
         <a href="/cart/">cart</a>
         <a href="/orders/customer_orders/">orders</a>
         <a href="/payments/customer_payments">payments</a>
-        <a href="/shop/product-list/">shop</a>
-        <a href="{% url 'users:logout' %}">Logout</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'users:logout' %}"><strong>Logout</strong></a>  
+        {% else %}
+          <a href="{% url 'users:login' %}"><strong>Log in / Sign up</strong></a>
+        {% endif %}
       </nav>
     </header>
     <br><br>
     <div class="container">{% block content %} {% endblock %}</div>
   </body>
 </html>
+

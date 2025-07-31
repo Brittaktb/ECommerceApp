@@ -1,11 +1,10 @@
 {% extends 'base.html' %} {% block title %} My_Payments {% endblock %} 
 
 {% block content %}
-<h1>My Payments Overview</h1>
 
 {% if payments %}
     {% if user.is_authenticated %}
-        <h2>{{ user.first_name }}'s payments overview:</h2>
+        <h1>{{ user.first_name }}'s payments overview:</h1>
     {% endif %}
 <table>
   <thead>

@@ -27,6 +27,7 @@ urlpatterns = [
     path("cart/", include("cart.urls", namespace="cart")),
     path("orders/", include("orders.urls", namespace="orders")),
     path("payments/", include("payments.urls", namespace="payments")),
+    #path("accounts/", include("django.contrib.auth.urls")),             #added by britta for login/logout button
 ]
 
 if settings.DEBUG:

@@ -13,5 +13,5 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     """ list display shows selected product details 
         prepopulated_fields create the slugfield automatically: here the name with '-' inbetween the words"""
-    list_display = ['name', 'price', 'available']
+    list_display = ['name', 'price', 'available', 'sku']
     prepopulated_fields = {'slug': ('name',)}

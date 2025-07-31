@@ -1,5 +1,12 @@
 {% extends 'base.html' %}
 {% block title %} Home {% endblock %}
 {% block content %}
-Welcome
-    {% endblock %}
+<h2>Welcome to our Shop</h2>
+  <br>
+  {% if user.is_authenticated %}
+    Hi {{ user.username|upper }}!
+    <p>Browse and book available products. Have FUN!</p>
+  {% else %}
+    <p><strong>Login</strong> or <strong>Sign up</strong> to explore our shop.</p>
+  {% endif %}
+{% endblock %}

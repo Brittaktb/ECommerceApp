@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.urls import reverse
 from .models import *  # includes CustomUser
 
-@login_required
+#@login_required
 def Home(request):
     return render(request,'shop/home.html')
 
@@ -62,7 +62,7 @@ def LoginView(request):
         if user is not None:
             login(request, user)
 
-            return redirect('users:home')
+            return redirect('shop:home')      #users:home
 
         else:
             messages.error(request, "Invalid login credentials")
@@ -73,7 +73,7 @@ def LoginView(request):
 
 def LogoutView(request):
     logout(request)
-    return redirect("users:login")
+    return redirect("shop:home") # users:login
 
 def ForgotPassword(request):
     if request.method == "POST":
