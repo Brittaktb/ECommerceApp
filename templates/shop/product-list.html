@@ -27,6 +27,7 @@
 <br>
 <table>
   <tr>
+    <th>Image</th>
     <th>Name</th>
     <th>Brand</th>
     <th>Description</th>
@@ -35,10 +36,18 @@
   </tr>
   {% for product in products %}
   <tr>
+    <td class="product-image-column"><img class="product-image" src="{{ product.product_images.first.picture.url }}" alt="No images found..."/></td>
     <td>{{ product.name }}</td>
     <td>{{ product.brand }}</td>
     <td>{{ product.description }}</td>
-    <td>€{{ product.price }}</td>
+    <td>
+      {% if product.sale_price %}
+        <div style="color:darkred;font-weight:bold">Sale</div>
+        <strike>€{{ product.price }}</strike>&nbsp;€{{ product.sale_price }}
+      {% else %}
+        €{{ product.price }}
+      {% endif %}
+    </td>
     <td>
       <a href="{% url 'shop:product_detail' product.pk %}"><button>Product Details</button></a>
       <a href="{% url 'cart:add-to-cart' product.id %}"><button> > CART</button></a>

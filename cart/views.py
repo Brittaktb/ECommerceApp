@@ -14,5 +14,4 @@ def add_to_cart(request, product_id):
     return render(request, "cart/add-to-cart.html", {"product": product})
 
 def view_cart(request):
-    # TODO: test my todos
     return render(request, "cart/cart.html")

@@ -5,12 +5,18 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+
+html {
+  height: 100%;
+  overflow-y: auto;
+}
+
 body{
   margin: 0;
   padding: 0;
-  background: linear-gradient(120deg,#2980b9, #8e44ad);
-  height: 100vh;
-  overflow: hidden;
+  background: linear-gradient(to right,#2980b9, #5b44ad);
+  min-height: 100vh;
+  overflow-y: auto;
 }
 .center{
   position: absolute;
@@ -112,23 +118,49 @@ input[type="submit"]:hover{
   text-decoration: underline;
 }
 
-button { 
-    background: green; 
-    color: white; 
-    padding: 10px 15px; 
-    border: none; 
-    border-radius: 4px; 
-    cursor: pointer; 
+button {
+    background: green;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
+table {
+    width: 100%;
+    border-collapse: collapse;
     margin-top: 20px;
 }
 
-th, td { 
-    padding: 10px; 
-    border-bottom: 1px solid #ccc; 
-    text-align: left; 
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+}
+
+/* Fix Bootstrap container overflow issue */
+.container {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+}
+
+/* Ensure table can extend beyond viewport */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    height: auto !important;
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+.product-image-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 150px;
 }
