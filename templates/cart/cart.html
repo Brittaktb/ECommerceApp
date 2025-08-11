@@ -1,24 +1,110 @@
+<!-- Cart_summary-->
+
 {% extends 'base.html' %}
-{% block title %} My Cart {% endblock title %}
+{% block title %}My Cart{% endblock title %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h2>{{ user.first_name }}'s Cart:</h2>
+<br/>
 
-        <div class="product-list">
+{% if user.is_authenticated %}
+    <h2>{{ user.first_name }}'s Cart:</h2>
+    
+    {% if items %}
+        {% for item in items %}
+        <div class="product-row d-flex align-items-center mb-3">
+            <div class="me-3" style="flex: 1;">
+                {{ item.product.name }}
+            </div>
 
+            <div class="me-3" style="flex: 1;">
+                <strong>Price:</strong> {{ item.product.price }} €
+            </div>
 
+            <div class="me-3" style="flex: 1;">
+                Quantity:
+                <select class="form-select form-select-sm" id="select{{ item.product.id }}">
+                    {% for i in "12345" %}
+                        <option value="{{ i }}" {% if item.quantity|stringformat:"s" == i %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        {% for item in cart_items %}
-        <div class="product-item">
-            <p>{{ item.product.name }} ({{ item.quantity }})</p>
-            <p>Price: ${{ item.product.price }}</p>
-            <a href="{% url 'cart:remove_from_cart' item.id %}">Remove</a>
+            <div style="flex: 1;">
+                <strong>Subtotal:</strong> {{ item.subtotal }} €
+            </div>
+
+            <div style="flex: 1;">
+                <button type="button" data-index="{{ item.product.id }}" class="btn btn-secondary update-cart">
+                    Update
+                </button>
+                <button type="button" data-index="{{ item.product.id }}" class="btn btn-danger delete-product">
+                    Remove
+                </button>
+            </div>
         </div>
-        {% empty %}
-        <p>Your cart is empty.</p>
         {% endfor %}
 
+        <!-- total price and button -->
+        <div class="cart-total mt-4">
+            <h3>Total: {{ totals }} €</h3>
+            <button class="btn btn-primary">Checkout</button>
         </div>
+    {% else %}
+        <p>Your cart is empty.</p>
     {% endif %}
-{% endblock %}
+{% endif %}
+
+
+<script>
+    // Update Cart
+    $(document).on('click', '.update-cart', function(e) {
+        e.preventDefault();
+
+        var productid = $(this).data('index');
+        var qty = $('#select' + productid + ' option:selected').val();
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart:cart_update' %}",
+            data: {
+                product_id: productid,
+                product_qty: qty,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json) {
+                location.reload();
+            },
+            error: function(xhr, errmsg, err) {
+                console.log('Error updating product in cart:', errmsg);
+            }
+        });
+    });
+
+    // Delete item from Cart
+    $(document).on('click', '.delete-product', function(e) {
+        e.preventDefault();
+
+        var productid = $(this).data('index');
+
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'cart:cart_delete' %}",
+            data: {
+                product_id: productid,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+            },
+            success: function(json) {
+                location.reload();
+            },
+            error: function(xhr, errmsg, err) {
+                console.log('Error deleting product from cart:', errmsg);
+            }
+        });
+    });
+</script>
+
+{% endblock content %}
+
+

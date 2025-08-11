@@ -5,44 +5,58 @@ from django.contrib import messages
 # Create your views here.
 
 #@login_required
+
+
+from django.shortcuts import render, get_object_or_404
+
 def home(request):
     return render(request, "shop/home.html")
 
-#@login_required
 def product_list(request):
-    """The product_list."""
-    products = Product.objects.filter(available=True) # we are filtering to get only available products.
+    products = Product.objects.filter(available=True)
     category_query = request.GET.get('category', '')
     if category_query:
-        products = Product.objects.filter(category_id__name__icontains=category_query, available=True)
-    else:
-        products = Product.objects.filter(available=True)
+        products = products.filter(category__name__icontains=category_query)
     return render(request, "shop/product-list.html", {"products": products})
 
-#@login_required
 def product_detail(request, pk):
-    #product = Product.objects.get(pk=pk)
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'shop/product_detail.html', {'product': product})
+
+# def home(request):
+#     return render(request, "shop/home.html")
+
+# #@login_required
+# def product_list(request):
+#     """The product_list."""
+#     products = Product.objects.filter(available=True) # we are filtering to get only available products.
+#     category_query = request.GET.get('category', '')
+#     if category_query:
+#         products = Product.objects.filter(category_id__name__icontains=category_query, available=True)
+#     else:
+#         products = Product.objects.filter(available=True)
+#     return render(request, "shop/product-list.html", {"products": products})
+
+# #@login_required
+# def product_detail(request, pk):
+#     #product = Product.objects.get(pk=pk)
+#     product = get_object_or_404(Product, pk=pk)
+#     return render(request, 'shop/product_detail.html', {'product': product})
  
     
-    
-    
-    
-    
-    # we are filtering to get only available categories.
-    category = Category.objects.filter(availability=True)
-    return render(request, "shop/product_detail.html")
+#     # we are filtering to get only available categories.
+#     category = Category.objects.filter(availability=True)
+#     return render(request, "shop/product_detail.html")
 
 
 
 
 
 
-# from .models import Product, CartItem, Cart  # adapt your model names
-# from django.contrib.auth.decorators import login_required
+# # from .models import Product, CartItem, Cart  # adapt your model names
+# # from django.contrib.auth.decorators import login_required
 
-# @login_required
+# # @login_required
 # def add_to_cart(request, product_id):
 #     product = get_object_or_404(Product, id=product_id, availability=True)
 #     cart, _ = Cart.objects.get_or_create(user=request.user)

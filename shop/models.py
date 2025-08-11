@@ -52,4 +52,4 @@ class ProductImage(models.Model):
     picture = models.ImageField(upload_to='product_images') # goes now to media/product_images instead to static
 
     def __str__(self):
-        return self.picture.name  # was before .url
+        return self.picture.name  # was before self.picture.url

@@ -27,29 +27,68 @@
 <br>
 <table>
   <tr>
+    <th> ID</th>
     <th>Name</th>
     <th>Brand</th>
     <th>Description</th>
     <th>Price</th>
+    <th>Quantity:</th>
     <th>Action</th>
   </tr>
   {% for product in products %}
   <tr>
+    <td>{{ product.id }}</td>
     <td>{{ product.name }}</td>
     <td>{{ product.brand }}</td>
     <td>{{ product.description }}</td>
     <td>€{{ product.price }}</td>
     <td>
+    <!--div class ="col-md-2">Quantity:</div>-->
+    <select class="form-select" name="product_qty" data-product-id="{{ product.id }}">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    </select>
+    <td>
       <a href="{% url 'shop:product_detail' product.pk %}"><button>Product Details</button></a>
-      <a href="{% url 'cart:add-to-cart' product.id %}"><button> > CART</button></a>
+      <!--<a href="{% url 'cart:cart' %}"><button type="button" value="{{ product.id }}" id="add-cart"> CART</button></a>-->
+      <button type="button" class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to CART</button>
     </td>
   </tr>
   {% endfor %}
 </table>
+
+<script>
+$(document).on('click', '.add-to-cart-btn', function(e){
+  e.preventDefault();
+
+  const productId = $(this).data('product-id'); 
+  const qty = $(this).closest('tr').find('select[name="product_qty"]').val();
+
+  $.ajax({
+    type: 'POST',
+    url: "{% url 'cart:cart_add' %}", 
+    data: {
+      product_id: productId,
+      product_qty: qty,
+      csrfmiddlewaretoken: '{{ csrf_token }}',
+      action: 'post'
+    },
+    success: function(json){
+      $('#cart_quantity').text(json.qty);
+      // KEIN Alert oder Pop-up hier
+    },
+    error: function(xhr, errmsg, err){
+      console.log('Fehler beim Hinzufügen zum Warenkorb:', errmsg);
+    },
+  });
+});
+
+</script>
+
+
+
 {% endblock %}
 
-
-      {% comment %} <!--<form method="post" action="{%  %}">
-        {% csrf_token %}-->
-      <!--shop:add_to_cart product.id-->
-      <!--</form>-->   {% endcomment %}

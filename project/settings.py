@@ -70,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "cart.context_processors.cart",                
             ],
         },
     },
@@ -145,6 +146,9 @@ AUTH_USER_MODEL = 'users.CustomUser'  # app.class
 CART_SESSION_ID = "cart"
 
 LOGIN_URL = "users:login"
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 1209600  # 2 weeks in seconds, only if user stays logged in
 
 EMAIL_HOST=os.getenv("EMAIL_HOST")
 EMAIL_PORT=os.getenv("EMAIL_PORT")
