@@ -2,7 +2,7 @@ from django.conf import settings
 from shop.models import Product
 from decimal import Decimal
 
-class Cart(object):  # Request object
+class Cart(object):
     def __init__(self, request):
         """
         Initialize the cart.
@@ -21,8 +21,12 @@ class Cart(object):  # Request object
         """
         product_id = str(product.id)
         if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0,
-                                    'price': str(product.price)}
+            if (product.sale_price is not None):
+                self.cart[product_id] = {'quantity': 0,
+                                         'price': str(product.sale_price)}
+            else:
+                self.cart[product_id] = {'quantity': 0,
+                                         'price': str(product.price)}
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
@@ -54,13 +58,19 @@ class Cart(object):  # Request object
         for product in products:
             cart[str(product.id)]['product'] = product
         for item in cart.values():
+            # quantity & price already added during add
             item['price'] = Decimal(item['price'])
             item['total_price'] = Decimal(item['price']) * item['quantity']
             yield item
 
+    def get_products(self):
+        """Return all products in the cart."""
+        return list(self.__iter__())
+
+
     def __len__(self):
         """
-        Count all items in the cart.
+        Count amount of all items in the cart.
         """
         return sum(item['quantity'] for item in self.cart.values())
 

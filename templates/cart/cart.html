@@ -2,23 +2,44 @@
 {% block title %} My Cart {% endblock title %}
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h2>{{ user.first_name }}'s Cart:</h2>
+    <h2>My Cart:</h2>
 
-        <div class="product-list">
+    <div class="product-list">
+
+    <table>
+        <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Brand</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Action</th>
+        </tr>
+        {% for cart_product in cart_products %}
+        <tr>
+            <td class="product-image-column"><img class="product-image" src="{{ cart_product.product.product_images.first.picture.url }}" alt="No images found..."/></td>
+            <td>{{ cart_product.product.name }}</td>
+            <td>{{ cart_product.product.brand }}</td>
+            <td>{{ cart_product.product.description }}</td>
+            <td>{{ cart_product.price }}</td>
+            <td>{{ cart_product.quantity }}</td>
+            <td>
+            <a href="{% url 'shop:product_detail' cart_product.product.pk %}"><button>Product Details</button></a>
+            {% comment %} <button class="button" type="button" value="{{ cart_product.product.id }}" id="add-to-cart-button">Add to Cart</button> {% endcomment %}
+            </td>
+        </tr>
 
 
 
-        {% for item in cart_items %}
-        <div class="product-item">
-            <p>{{ item.product.name }} ({{ item.quantity }})</p>
-            <p>Price: ${{ item.product.price }}</p>
-            <a href="{% url 'cart:remove_from_cart' item.id %}">Remove</a>
-        </div>
-        {% empty %}
-        <p>Your cart is empty.</p>
-        {% endfor %}
+    {% comment %} <div class="product-item">
+        <p>{{ products.product.name }} ({{ products.quantity }})</p>
+        <p>Price: ${{ products.product.price }}</p>
+        <a href="{% url 'cart:remove_from_cart' products.id %}">Remove</a>
+    </div> {% endcomment %}
+    {% empty %}
+    <p>Your cart is empty.</p>
+    {% endfor %}
 
-        </div>
-    {% endif %}
+    </div>
 {% endblock %}

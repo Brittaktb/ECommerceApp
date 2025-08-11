@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-   
+
   <h1>Product details:</h1>
 
   <h2>{{ product.name }}</h2>
@@ -12,7 +12,15 @@
   <li><strong>Brand:</strong> {{ product.brand }}</li>
   <li><strong>Product description:</strong> {{ product.description }}</li>
   <li><strong>Product availability:</strong> {{ product.available|yesno:"Yes,No" }}</li>
-  <li><strong>Price:</strong> {{ product.price }} €</li>
+  <li>
+    <strong>Price:</strong>
+    {% if product.sale_price %}
+        <strike>€{{ product.price }}</strike>&nbsp;€{{ product.sale_price }}
+        <div style="color:darkred;font-weight:bold">(On sale)</div>
+      {% else %}
+        €{{ product.price }}
+      {% endif %}
+  </li>
 </ul>
 
   {% comment %} <div style="margin-bottom: 20px; margin-top: 20px">
