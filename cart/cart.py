@@ -67,6 +67,9 @@ class Cart(object):
         """Return all products in the cart."""
         return list(self.__iter__())
 
+    def get_quantities(self):
+        """Return quantities of all products in the cart."""
+        return self.cart
 
     def __len__(self):
         """

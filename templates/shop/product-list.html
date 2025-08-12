@@ -7,7 +7,9 @@
     <th>Brand</th>
     <th>Description</th>
     <th>Price</th>
-    <th>Action</th>
+    <th></th>
+    <th>Quantity</th>
+    <th></th>
   </tr>
   {% for product in products %}
   <tr>
@@ -23,10 +25,17 @@
         €{{ product.price }}
       {% endif %}
     </td>
+    <td><a href="{% url 'shop:product_detail' product.pk %}"><button>Product Details</button></a></td>
     <td>
-      <a href="{% url 'shop:product_detail' product.pk %}"><button>Product Details</button></a>
-      <button class="button add-to-cart-button" type="button" value="{{ product.id }}">Add to Cart</button>
+      <select class="form-select qty-cart" name="quantity">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
     </td>
+    <td><button class="button add-to-cart-button" type="button" value="{{ product.id }}">Add to Cart</button></td>
   </tr>
   {% endfor %}
 </table>
@@ -40,8 +49,9 @@
       type: 'POST',
       url: '{% url 'cart:cart_add' %}',
       data: {
-        'product_id': $(this).val(),  // get value of button that triggered the event
-        'csrfmiddlewaretoken': '{{ csrf_token }}',
+        product_id: $(this).val(),  // get value of button that triggered the event
+        product_qty: $(this).closest('tr').find('.qty-cart option:selected').val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}',
         action: 'post'
       },
       success: function(json) {
@@ -55,7 +65,6 @@
     });
   }
   )
-
 
 </script>
 

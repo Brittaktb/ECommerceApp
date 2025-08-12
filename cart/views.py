@@ -18,12 +18,13 @@ def add_to_cart(request):
     if request.POST.get('action') == 'post':
         # get stuff
         product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
 
         # lookup product in database
         product = get_object_or_404(Product, id=product_id)
 
         # save to session
-        cart.add(product=product)
+        cart.add(product=product, quantity=product_qty)
 
         # get cart quantity
         cart_quantity = cart.__len__()
@@ -43,10 +44,26 @@ def delete_from_cart(request, product_id):
     # cart.remove(product)
     # return redirect("view_cart")
 
-def update_cart(request, product_id):
-    return redirect("view_cart")
-    # product = get_object_or_404(Product, id=product_id)
-    # cart = Cart(request)
-    # quantity = int(request.POST.get('quantity'))
-    # cart.add(product, quantity)
-    # return redirect("view_cart")
+def update_cart(request):
+    # initialise the cart object
+    cart = Cart(request)
+    # test for POST
+    if request.POST.get('action') == 'post':
+        # get stuff
+        product_id = int(request.POST.get('product_id'))
+        product_qty = int(request.POST.get('product_qty'))
+
+        # lookup product in database
+        product = get_object_or_404(Product, id=product_id)
+
+        # save to session
+        cart.add(product=product, quantity=product_qty, override_quantity=True)
+
+        # get cart quantity
+        cart_quantity = cart.__len__()
+
+        # Return response
+        # return JsonResponse({'product_id': product_id})
+        return JsonResponse({'qty': cart_quantity})
+    else:
+        return JsonResponse({'status': False})

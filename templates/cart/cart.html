@@ -7,39 +7,77 @@
     <div class="product-list">
 
     <table>
-        <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Action</th>
-        </tr>
-        {% for cart_product in cart_products %}
-        <tr>
-            <td class="product-image-column"><img class="product-image" src="{{ cart_product.product.product_images.first.picture.url }}" alt="No images found..."/></td>
-            <td>{{ cart_product.product.name }}</td>
-            <td>{{ cart_product.product.brand }}</td>
-            <td>{{ cart_product.product.description }}</td>
-            <td>{{ cart_product.price }}</td>
-            <td>{{ cart_product.quantity }}</td>
-            <td>
-            <a href="{% url 'shop:product_detail' cart_product.product.pk %}"><button>Product Details</button></a>
-            {% comment %} <button class="button" type="button" value="{{ cart_product.product.id }}" id="add-to-cart-button">Add to Cart</button> {% endcomment %}
-            </td>
-        </tr>
+        {% if cart_products %}
 
-
-
-    {% comment %} <div class="product-item">
-        <p>{{ products.product.name }} ({{ products.quantity }})</p>
-        <p>Price: ${{ products.product.price }}</p>
-        <a href="{% url 'cart:remove_from_cart' products.id %}">Remove</a>
-    </div> {% endcomment %}
-    {% empty %}
-    <p>Your cart is empty.</p>
-    {% endfor %}
-
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Brand</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th></th>
+                <th>Quantity</th>
+                <th></th>
+            </tr>
+            {% for cart_product in cart_products %}
+                <tr>
+                    <td class="product-image-column"><img class="product-image" src="{{ cart_product.product.product_images.first.picture.url }}" alt="No images found..."/></td>
+                    <td>{{ cart_product.product.name }}</td>
+                    <td>{{ cart_product.product.brand }}</td>
+                    <td>{{ cart_product.product.description }}</td>
+                    <td>{{ cart_product.price }}</td>
+                    <td>{{ cart_product.quantity }}</td>
+                    <td>{{ cart_product.total_price }}</td>
+                    <td>
+                    <a href="{% url 'shop:product_detail' cart_product.product.pk %}"><button>Product Details</button></a>
+                    {% comment %} <button class="button" type="button" value="{{ cart_product.product.id }}" id="add-to-cart-button">Add to Cart</button> {% endcomment %}
+                    </td>
+                    <td>
+                        <input type="number" min="1" max="99" step="1"
+                               class="form-control qty-cart" name="quantity" value="{{ cart_product.quantity }}"
+                               id="qty_{{ cart_product.product.id }}" style="width: 80px;"/>
+                    </td>
+                    <td>
+                        <button class="button update-qty-button" type="button" value="{{cart_product.product.id}}">Update</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="8">Your cart is empty.</td></tr>
+        {% endif %}
+    </table>
     </div>
+
+    <script>
+    // Check if button pressed
+    $('.update-qty-button').click(function(e) {
+
+        e.preventDefault();  // Prevent default form submission behavior
+        $.ajax({  // do a hidden postback to the url(view) below
+        type: 'POST',
+        url: '{% url 'cart:cart_update' %}',
+        data: {
+            product_id: $(this).val(),  // get value of button that triggered the event
+            product_qty: $(this).closest('tr').find('.qty-cart').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json) {
+            //console.log(json)
+            //document.getElementById("cart_quantity").
+            //textContent = json.qty
+            location.reload()
+        },
+        error: function(xhr, errmsg, err) {
+            console.log(errmsg);
+        }
+        });
+    }
+    )
+
+    </script>
+
 {% endblock %}
+
