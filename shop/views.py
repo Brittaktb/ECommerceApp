@@ -9,10 +9,15 @@ def home(request):
     return render(request, "shop/home.html")
 
 #@login_required
-def product_list(request):
+def product_list(request, category_pk=None):
     """The product_list."""
-    products = Product.objects.filter(available=True) # we are filtering to get only available products.
-    return render(request, "shop/product-list.html", {"products": products})
+    if category_pk:
+        category = get_object_or_404(Category, pk=category_pk)
+        products = Product.objects.filter(category=category).filter(available=True)
+    else:
+        category = None
+        products = Product.objects.filter(available=True) # we are filtering to get only available products.
+    return render(request, "shop/product-list.html", {"products": products, "category": category})
 
 #@login_required
 def product_detail(request, pk):
@@ -20,15 +25,13 @@ def product_detail(request, pk):
     product = get_object_or_404(Product, pk=pk)
     return render(request, 'shop/product_detail.html', {'product': product})
 
-# from .models import Product, CartItem, Cart  # adapt your model names
-# from django.contrib.auth.decorators import login_required
+def category_summary(request, search_term=''):
+    if request.method == 'POST':
+        search_term = request.POST['txt_search']
 
-# @login_required
-# def add_to_cart(request, product_id):
-#     product = get_object_or_404(Product, id=product_id, availability=True)
-#     cart, _ = Cart.objects.get_or_create(user=request.user)
-#     item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-#     if not created:
-#         item.quantity +=1
-#         item.save()
-#     return redirect('shop:product_list')
+    if search_term == '':
+        categories = Category.objects.all()
+    else:
+        categories = Category.objects.filter(name__icontains=search_term)
+
+    return render(request, 'shop/category_summary.html', {'categories': categories, 'search_term': search_term})

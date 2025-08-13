@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Category Summary {% endblock %}
+{% block content %}
+<h2>Choose your category below</h2>
+  <br>
+  <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar for search box">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text" id="btnGroupAddon">@</div>
+      </div>
+      <form method="POST" action="{% url 'shop:category_summary' %}">
+        {% csrf_token %}
+        {% if search_term %}
+          <input type="text" class="form-control" placeholder="Search..." name="txt_search" id="txt_search"
+                aria-label="Search bar example" aria-describedby="btnGroupAddon" value="{{search_term}}" />
+        {% else %}
+          <input type="text" class="form-control" placeholder="Search..." name="txt_search" id="txt_search"
+                aria-label="Search bar example" aria-describedby="btnGroupAddon"/>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="btn-toolbar mb-3 gap-2" role="toolbar" aria-label="Toolbar with button groups">
+    {% for category in categories %}
+      <div class="btn-group mr-2" role="group" aria-label="Group{{category.pk}}">
+        <a href="{% url 'shop:products_by_category' category_pk=category.pk %}"><button>{{ category.name }}</button></a><br>
+      </div>
+    {% empty %}
+      <p>No Categories Found.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -13,7 +13,15 @@
                   <li><a class="dropdown-item" href="{% url 'payments:customer-payments' %}">My Payments</a></li>
                 </ul>
               </li>
-              <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'shop:product-list' %}">Products</a></li>
+              {% comment %} <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'shop:product-list' %}">Products</a></li> {% endcomment %}
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Products</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="{% url 'shop:category_summary' %}">Categories</a></li>
+                  <li><hr class="dropdown-divider" /></li>
+                  <li><a class="dropdown-item" href="{% url 'shop:product-list' %}">All Products</a></li>
+                </ul>
+              </li>
             </ul>
             <form class="d-flex">
               <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
