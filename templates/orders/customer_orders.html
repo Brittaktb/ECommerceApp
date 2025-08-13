@@ -14,7 +14,8 @@
             <th>Customers email</th>
             <th>Customers-ID</th>
             <th>Order date</th>
-            <th>Paid status</th>
+            <th>Order quantity</th>
+            <th>Total price</th>
             </tr>
         </thead>
         <tbody>
@@ -24,7 +25,8 @@
             <td>{{ order.email }}</td>
             <td>{{ order.customer.id }}</td>
             <td>{{ order.created|date:"d.m.Y H:i" }}</td>
-            <td>{{ order.paid }}</td>
+            <td>{{ order.total_items }}</td>
+            <td>{{ order.total_price }}</td>
             </tr>
             {% endfor %}
         </tbody>

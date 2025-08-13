@@ -47,7 +47,7 @@
         <!-- total price and button -->
         <div class="cart-total mt-4">
             <h3>Total: {{ totals }} €</h3>
-            <button class="btn btn-primary">Checkout</button>
+            <a href="{% url 'orders:checkout' %}" class="btn btn-primary">Checkout</a>
         </div>
     {% else %}
         <p>Your cart is empty.</p>
