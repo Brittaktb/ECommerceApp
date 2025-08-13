@@ -15,10 +15,10 @@
                 <th>Brand</th>
                 <th>Description</th>
                 <th>Price</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
+                <th></th>
                 <th></th>
                 <th>Quantity</th>
+                <th></th>
                 <th></th>
             </tr>
             {% for cart_product in cart_products %}
@@ -27,11 +27,18 @@
                     <td>{{ cart_product.product.name }}</td>
                     <td>{{ cart_product.product.brand }}</td>
                     <td>{{ cart_product.product.description }}</td>
-                    <td>{{ cart_product.price }}</td>
-                    <td>{{ cart_product.quantity }}</td>
-                    <td>{{ cart_product.total_price }}</td>
+                    <td style="text-align:left;">
+                        Price:<br/>
+                        Quantity:<br/>
+                        Subtotal:
+                    </td>
+                    <td style="text-align:right;">
+                        € {{ cart_product.price }}<br/>
+                        {{ cart_product.quantity }}<br/>
+                        € {{ cart_product.total_price }}
+                    </td>
                     <td>
-                    <a href="{% url 'shop:product_detail' cart_product.product.pk %}"><button>Product Details</button></a>
+                    <a href="{% url 'shop:product_detail' cart_product.product.pk %}"><button>Details</button></a>
                     {% comment %} <button class="button" type="button" value="{{ cart_product.product.id }}" id="add-to-cart-button">Add to Cart</button> {% endcomment %}
                     </td>
                     <td>
@@ -42,8 +49,14 @@
                     <td>
                         <button class="button update-qty-button" type="button" value="{{cart_product.product.id}}">Update</button>
                     </td>
+                    <td>
+                        <button class="button remove-qty-button" type="button" value="{{cart_product.product.id}}">Remove</button>
+                    </td>
                 </tr>
             {% endfor %}
+            <tr><td colspan="6"></td><td colspan="4" style="text-align:right;">
+                Total price: € {{ total_price }}
+            </td></tr>
         {% else %}
             <tr><td colspan="8">Your cart is empty.</td></tr>
         {% endif %}
@@ -51,7 +64,7 @@
     </div>
 
     <script>
-    // Check if button pressed
+    // update button
     $('.update-qty-button').click(function(e) {
 
         e.preventDefault();  // Prevent default form submission behavior
@@ -61,6 +74,31 @@
         data: {
             product_id: $(this).val(),  // get value of button that triggered the event
             product_qty: $(this).closest('tr').find('.qty-cart').val(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json) {
+            //console.log(json)
+            //document.getElementById("cart_quantity").
+            //textContent = json.qty
+            location.reload()
+        },
+        error: function(xhr, errmsg, err) {
+            console.log(errmsg);
+        }
+        });
+    }
+    )
+
+    // remove button
+    $('.remove-qty-button').click(function(e) {
+
+        e.preventDefault();  // Prevent default form submission behavior
+        $.ajax({  // do a hidden postback to the url(view) below
+        type: 'POST',
+        url: '{% url 'cart:cart_delete' %}',
+        data: {
+            product_id: $(this).val(),  // get value of button that triggered the event
             csrfmiddlewaretoken: '{{ csrf_token }}',
             action: 'post'
         },
