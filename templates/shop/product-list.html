@@ -10,6 +10,11 @@
 {% endif %}
 <hr/>
 
+<div class="form-floating">
+  <input type="text" id="txt_search" class="form-control" placeholder="Enter search..." onkeyup="searchProducts() "/>
+  <label for="txt_search" class="form-label">Search Product</label>
+</div>
+
 <table>
   <tr>
     <th>Image</th>
@@ -76,12 +81,27 @@
   }
   )
 
+  function searchProducts(){
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("txt_search");
+    filter = input.value.toUpperCase();
+    table = document.getElementsByTagName("table")[0];
+    tr = table.getElementsByTagName("tr");
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
 </script>
 
 {% endblock %}
 
-
-      {% comment %} <!--<form method="post" action="{%  %}">
-        {% csrf_token %}-->
-      <!--shop:add_to_cart product.id-->
-      <!--</form>-->   {% endcomment %}

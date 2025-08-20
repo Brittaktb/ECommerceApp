@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from shop.models import Product
 from cart.cart import Cart
 from django.http import JsonResponse
+from django.contrib import messages
 
 
 # Create your views here.
