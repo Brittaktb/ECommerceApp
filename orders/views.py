@@ -1,37 +1,67 @@
 from django.views.generic import ListView
-from .models import Order, Product
+from .models import Order, Product, OrderItem
 from users.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from .forms import OrderForm
+from cart.cart import Cart
 
+@login_required
+def checkout(request):
+    cart = Cart(request)
+    cart_products = cart.get_products()
+    total_price = cart.get_total_price()
+    total_items = cart.__len__()
 
+    if not cart_products:
+        return redirect('cart:cart')
 
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.customer = request.user
+            order.total_items = total_items
+            order.total_price = f"{total_price:.2f}"
+            order.save()
 
-# def order_create(request, product_id):
-#     # Retrieve a product
-#     product = get_object_or_404(Product, id=product_id)
-#     customer_details = get_object_or_404(CustomUser, id=customuser_id)
-#     if request.method == "POST":
-#         #Get the product values
-#             order = Order.objects.create(
-#             first_name=request.user,
-#             email=
-#             phone_number=
-#             address=
-#             postal_code
-#             city
-#             created
-#             updated
-#             paid
-#             total_items
-#             total_price
-#             discount
-#             customer_id
-#             )
-#             return redirect("payments:pay", order.id)
-#     form = OrderForm()
-#     return render(request, "orders/orders.html", {"order": order,"form": form})
-  
+            # set up OrderItems from cart
+            for row_item in cart_products:
+                OrderItem.objects.create(
+                    order=order,
+                    product=row_item["product"],
+                    price=row_item["price"],
+                    quantity=row_item["quantity"]
+                )
+
+            # delete Cart
+            request.session['cart'] = {}
+            request.session.modified = True
+
+            return redirect('payments:process_payment', order_id= int(order.id))
+    else:
+        user = request.user
+        initial_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'phone_number': user.phone_number if hasattr(user, 'phone_number') else '',
+            'address': user.address if hasattr(user, 'address') else '',
+            'postal_code': user.postal_code if hasattr(user, 'postal_code') else '',
+            'city': user.city if hasattr(user, 'city') else '',
+        }
+        form = OrderForm(initial=initial_data)
+
+    return render(request, 'orders/checkout.html', {
+        'form': form,
+        'items': [{
+            'product': row_item["product"],
+            'quantity': row_item["quantity"],
+            'subtotal': row_item["total_price"]
+        } for row_item in cart_products],
+        'total_price': total_price,
+        'total_items': total_items,
+    })
 
 class OrderListView(ListView):
     model = Order

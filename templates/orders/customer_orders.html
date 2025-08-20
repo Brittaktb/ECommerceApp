@@ -1,11 +1,11 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% block title %} My Orders {% endblock title %}
 
 {% block content %}
     {% if user.is_authenticated %}
-        <h2>{{ user.first_name }}'s orders overview:</h2>
+        <h2>My orders overview:</h2>
     {% endif %}
-    
+
     {% if orders %}
         <table>
         <thead>
@@ -30,6 +30,6 @@
         </tbody>
         </table>
         {% else %}
-        <p>No orders found</p>
+        <p>No orders found...</p>
         {% endif %}
-{% endblock %} 
+{% endblock %}

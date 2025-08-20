@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}My Cart{% endblock title %}
+
+{% block content %}
+
+    <br/><br/>
+    <h2> Order completion </h2>
+    <br/>
+    Fill in or add required order information:
+    <br/><br/>
+    <form method="post">
+        {% csrf_token %}
+            {% for field in form %}
+            <div>
+                {{ field.label_tag }} {{ field }}
+                {% if field.errors %}
+                <span class="error">{{ field.errors.0 }}</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        <br/><br/>
+
+        <h4> <strong> Order items: </strong> {{ total_items}} </h4>
+        <h4> <strong> Order total price: </strong> {{ total_price }} </h4>
+        <br/><br/>
+
+        <button type="submit">To Payment</button>
+    </form>
+
+{% endblock content %}

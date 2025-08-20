@@ -54,9 +54,18 @@
                     </td>
                 </tr>
             {% endfor %}
-            <tr><td colspan="6"></td><td colspan="4" style="text-align:right;">
-                Total price: € {{ total_price }}
-            </td></tr>
+            <tr>
+                <td colspan="4"></td>
+                <td style="text-align:left;"><strong>Total:</strong></td>
+                <td style="text-align:right;">€ {{ total_price }}</td>
+            </tr>
+            <tr>
+                <td colspan="4"></td>
+                <td style="text-align:left;"></td>
+                <td style="text-align:right;">
+                    <a href="{% url 'orders:checkout' %}"><button>Checkout</button></a>
+                </td>
+            </tr>
         {% else %}
             <tr><td colspan="8">Your cart is empty.</td></tr>
         {% endif %}
